@@ -22,6 +22,9 @@ class KiwiInstructionService:
         self.rate = 150
         self.volume = 1.0
 
+        # setting session time
+        self.session_timeout = 5
+
     def speak(self, text: str):
         engine = pyttsx3.init()
         engine.setProperty("rate", self.rate)
@@ -50,17 +53,26 @@ class KiwiInstructionService:
         classified_instruction = self.nlp_service.classify_instruction(instruction)
         print(classified_instruction)
 
+        # 1) Wake word always allowed (starts the 5s window)
         if classified_instruction == "WAKE_WORD":
             self.session_service.start_session()
             self.speak("I am listening!")
+            return
 
-        elif classified_instruction == "JOKE":
+        # 2) Any other command requires an active (non-expired) session
+        if not self.session_service.session_active(self.session_timeout):
+            self.speak("Say hey kiwi first.")
+            return
+
+
+        if classified_instruction == "JOKE":
             joke = self.jokes_service.find_a_joke()
             self.speak(joke.setup)
             self.speak(joke.punchline)
+            self.session_service.terminate_session()
+            return
 
         elif classified_instruction == "SONG":
-            # Get a clean song name for the API lookup
             song_query = self._clean_song_query(instruction)
             song_query = song_query.lower()
 
@@ -68,24 +80,35 @@ class KiwiInstructionService:
 
             if song is None:
                 self.speak("I couldn't find that song.")
+                self.session_service.terminate_session()
                 return
 
             self.speak(f"Playing {song.name} by {song.artist}")
 
-            # Use MusicPlayer (streams YouTube audio and plays it)
             try:
                 self.music_player.play(song.url, song.name)
             except Exception as e:
                 print("DEBUG music playback error:", e)
                 self.speak("Sorry, I couldn't play that right now.")
 
+            self.session_service.terminate_session()
+            return
+
+        # You currently detect these by string match, keep that as-is
         elif "stop" in instruction.lower():
             self.music_player.stop()
             self.speak("Music stopped.")
+            self.session_service.terminate_session()
+            return
 
         elif "pause" in instruction.lower():
             self.music_player.pause()
             self.speak("Music paused.")
+            self.session_service.terminate_session()
+            return
 
         elif "resume" in instruction.lower():
             self.music_player.resume()
+            self.speak("Music resumed.")
+            self.session_service.terminate_session()
+            return

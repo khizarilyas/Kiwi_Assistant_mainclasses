@@ -1,10 +1,13 @@
+from unicodedata import category
+
 import requests  # Used to make HTTP requests to the jokes API
 from dataclasses import dataclass  # Used to define simple data containers
 
 
 @dataclass(frozen=True)  # Immutable joke data model
 class Joke:
-    id: int         # Unique joke identifier
+    id: int  # Unique joke identifier
+    category = str # Category of the joke
     setup: str      # Joke setup text
     punchline: str  # Joke punchline text
 
@@ -18,11 +21,12 @@ class JokesService:
 
         # Extract joke fields from JSON response
         id = response.json()["id"]
+        category = response.json()["category"]
         setup = response.json()["setup"]
         punchline = response.json()["punchline"]
 
         # Create Joke object from response data
-        joke = Joke(id, setup, punchline)
+        joke = Joke(id,category, setup, punchline)
 
         # Return the joke object
         return joke
