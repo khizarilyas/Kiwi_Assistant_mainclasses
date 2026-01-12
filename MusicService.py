@@ -31,15 +31,15 @@ class SongService:
 
 
     def get_song_by_name(self, song_name: str):
-        response = requests.get(f"http://127.0.0.1:5001/songs/{song_name}")
+        # response = requests.get(f"http://127.0.0.1:5001/songs/{song_name}")
+        #
+        # if response.status_code != 200:
+        #     return None
 
-        if response.status_code != 200:
-            return None
-
-        data = response.json()
+        # data = response.json()
         return Song(
-            data["id"],
-            data["name"],
-            data["artist"],
-            data["url"]
+            123,
+            "Dil Dil Pakistan",
+            "JJ",
+           "https://www.youtube.com/watch?v=BiVyN2ftrrs"
         )

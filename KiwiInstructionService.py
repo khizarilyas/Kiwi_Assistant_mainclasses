@@ -26,6 +26,11 @@ class KiwiInstructionService:
         self.session_timeout = 5
 
     def speak(self, text: str):
+        # Duck music volume if it's playing
+        was_playing = self.music_player.is_playing()
+        if was_playing:
+            self.music_player.duck_volume()
+
         engine = pyttsx3.init()
         engine.setProperty("rate", self.rate)
         engine.setProperty("volume", self.volume)
@@ -37,6 +42,10 @@ class KiwiInstructionService:
         engine.say(text)
         engine.runAndWait()
         engine.stop()
+
+        # Restore volume if it was ducked
+        if was_playing:
+            self.music_player.unduck_volume()
 
     def _clean_song_query(self, instruction: str) -> str:
         """
@@ -60,9 +69,8 @@ class KiwiInstructionService:
             return
 
         # 2) Any other command requires an active (non-expired) session
-        if not self.session_service.session_active(self.session_timeout):
-            self.speak("Say hey kiwi first.")
-            return
+        # if not self.session_service.session_active(self.session_timeout):
+        #     return
 
 
         if classified_instruction == "JOKE":
@@ -77,6 +85,7 @@ class KiwiInstructionService:
             song_query = song_query.lower()
 
             song = self.songs_service.get_song_by_name(song_query)
+            print("rerturned song")
 
             if song is None:
                 self.speak("I couldn't find that song.")
@@ -112,3 +121,6 @@ class KiwiInstructionService:
             self.speak("Music resumed.")
             self.session_service.terminate_session()
             return
+
+    def isMusicPlaying(self):
+        return self.music_player.is_playing()

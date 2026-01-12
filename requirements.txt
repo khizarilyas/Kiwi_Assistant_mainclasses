@@ -1,0 +1,7 @@
+vosk
+pyaudio
+requests
+pyttsx3
+spacy
+yt-dlp
+python-vlc

@@ -1,5 +1,7 @@
 import spacy
 from spacy.matcher import PhraseMatcher
+import sys
+import subprocess
 
 # -------------------------------
 # NLP SERVICE
@@ -9,15 +11,24 @@ class NLPService:
     def __init__(self):
 
         # Load spaCy English model
-        self.nlp = spacy.load("en_core_web_sm")
+        try:
+            self.nlp = spacy.load("en_core_web_sm")
+        except OSError:
+            # If model is not found, download it automatically
+            print("Downloading spaCy model 'en_core_web_sm'...")
+            subprocess.run([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
+            self.nlp = spacy.load("en_core_web_sm")
 
         # Create a phrase matcher
         self.matcher = PhraseMatcher(self.nlp.vocab)
 
         # Convert patterns to spaCy documents
-        wake_word_patterns = [self.nlp(text) for text in ["hello kiwi", "hey kiwi", "okay kiwi", "ok kiwi"]]
+        wake_word_patterns = [self.nlp(text) for text in [
+            "hello kiwi", "hey kiwi", "okay kiwi", "ok kiwi",
+            "kiwi", "key we", "kee wee", "he kiwi", "hay kiwi", "halo kiwi"
+        ]]
         joke_patterns = [self.nlp(text) for text in ["tell me a joke"]]
-        song_patterns = [self.nlp(text) for text in ["play the song", "Can I listen to", "Please can you play"]]
+        song_patterns = [self.nlp(text) for text in ["play the song", "Can I listen to", "Please can you play", "music"]]
 
         # Add patterns to matcher
         self.matcher.add("WAKE_WORD", wake_word_patterns)
@@ -29,6 +40,7 @@ class NLPService:
     def classify_instruction(self, text):
         # Clean input text
         cleaned_text = text.lower().strip()
+        print(cleaned_text)
 
         # Use spaCy to analyse text
         doc = self.nlp(cleaned_text)
