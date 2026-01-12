@@ -20,7 +20,10 @@ class VoiceInputService:
             "key we", "kee wee", "key way", "kiki", "kee we",
             "he kiwi", "hay kiwi", "halo kiwi", "kewee",
             "terminate", "stop", "pause", "resume", "[unk]", "gabby", "givi", "hello gabby",
-            "hello gvi", "hi gvi"
+            "hello gvi", "hi gvi",
+            "tell me a joke", "make me laugh", "do you know a joke", 
+            "tell another joke", "say something funny", "crack a joke",
+            "tell a joke", "another joke", "funny", "laugh", "joke"
         ]
 
         # Create recognizer configured for 16kHz speech audio

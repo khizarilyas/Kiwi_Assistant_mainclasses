@@ -27,7 +27,11 @@ class NLPService:
             "hello kiwi", "hey kiwi", "okay kiwi", "ok kiwi",
             "kiwi", "key we", "kee wee", "he kiwi", "hay kiwi", "halo kiwi"
         ]]
-        joke_patterns = [self.nlp(text) for text in ["tell me a joke"]]
+        joke_patterns = [self.nlp(text) for text in [
+            "tell me a joke", "make me laugh", "do you know a joke", 
+            "tell another joke", "say something funny", "crack a joke",
+            "tell a joke", "another joke"
+        ]]
         song_patterns = [self.nlp(text) for text in ["play the song", "Can I listen to", "Please can you play", "music"]]
 
         # Add patterns to matcher
