@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="POST">
+    <p>
+        Song Name:<br>
+        <input type="text" name="name" required>
+    </p>
+
+    <p>
+        Artist:<br>
+        <input type="text" name="artist" required>
+    </p>
+
+    <p>
+        YouTube URL:<br>
+        <input type="text" name="url" required>
+    </p>
+
+    <p>
+        <button class="btn" type="submit">Add Song</button>
+    </p>
+</form>
+
+{% endblock %}

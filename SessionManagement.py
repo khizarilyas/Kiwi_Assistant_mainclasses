@@ -1,5 +1,5 @@
 from dataclasses import dataclass  # Lets us create classes meant to store data
-from datetime import datetime, timezone  # datetime = timestamps, timezone = timezone-aware UTC
+from datetime import datetime, timezone, timedelta  # datetime = timestamps, timezone = timezone-aware UTC
 
 # A dataclass to conveniently define a class that mainly stores data.
 @dataclass(frozen=True)
@@ -22,6 +22,16 @@ class SessionService:
         """
         self.session = Session(started_at=datetime.now(timezone.utc), active=True)
         return self.session
+
+    def session_active(self, timeout_seconds: int = 15) -> bool:
+        """
+        True if session is marked active AND within timeout window.
+        """
+        if not self.session.active:
+            return False
+
+        expires_at = self.session.started_at + timedelta(seconds=timeout_seconds)
+        return datetime.now(timezone.utc) <= expires_at
 
     def terminate_session(self):
         """

@@ -1,8 +1,15 @@
-from VoiceInput import VoiceInputService  # Import the voice input handler class
+from tkinter import Tk
+from UI import KiwiUI
 
-voice_input = VoiceInputService()  # Create an instance of the service
+if __name__ == "__main__":
+    root = Tk()
+    ui = KiwiUI(root)
+    ui.run()
 
-voice_input.start_listening()  # Begin listening for spoken input
-
-
-
+# from VoiceInput import *
+#
+# voice_input = VoiceInputService()  # Create an instance of the service
+#
+# voice_input.start_listening()  # Begin listening for spoken input
+#
+x
