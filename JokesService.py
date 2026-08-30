@@ -7,7 +7,7 @@ from dataclasses import dataclass  # Used to define simple data containers
 @dataclass(frozen=True)  # Immutable joke data model
 class Joke:
     id: int  # Unique joke identifier
-    category = str # Category of the joke
+    category: str # Category of the joke
     setup: str      # Joke setup text
     punchline: str  # Joke punchline text
 
@@ -26,7 +26,7 @@ class JokesService:
         punchline = response.json()["punchline"]
 
         # Create Joke object from response data
-        joke = Joke(id,category, setup, punchline)
+        joke = Joke(id, category, setup, punchline)
 
         # Return the joke object
         return joke

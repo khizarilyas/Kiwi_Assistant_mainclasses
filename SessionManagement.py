@@ -23,7 +23,7 @@ class SessionService:
         self.session = Session(started_at=datetime.now(timezone.utc), active=True)
         return self.session
 
-    def session_active(self, timeout_seconds: int = 5) -> bool:
+    def session_active(self, timeout_seconds: int = 15) -> bool:
         """
         True if session is marked active AND within timeout window.
         """
